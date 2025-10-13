@@ -1,0 +1,52 @@
+# Homebrew packages for macOS
+# Usage: brew bundle --file=manual/homebrew/Brewfile
+
+# Note: homebrew/bundle and homebrew/services are now built-in
+
+# Essential tools
+brew "git"
+brew "wget"
+brew "curl"
+
+# Modern CLI replacements
+brew "eza"           # modern ls (replaces exa)
+brew "bat"           # cat with syntax highlighting
+brew "fd"            # fast find replacement
+brew "ripgrep"       # fast grep replacement
+brew "fzf"           # fuzzy finder
+brew "delta"         # better git diff
+brew "sd"            # modern sed replacement
+brew "dust"          # modern du
+brew "bottom"        # modern top/htop
+
+# Development tools
+brew "neovim"
+brew "tmux"
+brew "gh"            # GitHub CLI
+brew "jq"            # JSON processor
+brew "yq"            # YAML processor
+brew "httpie"        # modern curl for APIs
+
+# Language tools
+brew "pyenv"
+brew "pyenv-virtualenv"
+# brew "nvm"         # Skip - already installed via install.sh
+brew "rustup"
+brew "go"
+
+# Container tools
+# brew "docker"        # Skip if Docker Desktop installed
+# brew "docker-compose" # Docker Desktop includes this
+# brew "colima"        # Alternative to Docker Desktop (conflicts if both installed)
+
+# Optional productivity tools
+brew "starship"      # Cross-shell prompt (alternative to p10k)
+brew "zoxide"        # Smart cd command
+brew "direnv"        # Per-project environment variables
+brew "watchman"      # File watching service
+brew "tree"          # Directory tree viewer
+
+# macOS specific
+cask "font-meslo-lg-nerd-font"  # For terminal icons
+cask "rectangle"                 # Window management
+cask "alt-tab"                  # Better app switcher

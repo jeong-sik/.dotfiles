@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn -v)",
+      "Bash(pip3:*)",
+      "Bash(git --version)",
+      "Bash(nvim:*)",
+      "Bash(vim:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
