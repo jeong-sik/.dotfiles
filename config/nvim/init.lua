@@ -1,3 +1,17 @@
+-- ============================================================================
+-- Neovim Configuration (Modern Lua with Lazy.nvim)
+-- ============================================================================
+-- Quick Reference:
+--   Leader: <Space>
+--   Git UI: <Space>gg (LazyGit), ]c/[c (hunks)
+--   Files: <Ctrl-p> or <Space>ff (Telescope)
+--   LSP: gd (definition), K (hover), <leader>vrn (rename)
+--   Windows: <Ctrl-h/j/k/l>
+--   IME: ESC (auto-switch to English)
+--
+-- Full keybindings: See ~/.dotfiles/README.md
+-- ============================================================================
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -257,10 +271,80 @@ require("lazy").setup({
     config = true
   },
 
+  -- LazyGit integration
+  {
+    "kdheepak/lazygit.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+
   -- Git signs
   {
     'lewis6991/gitsigns.nvim',
-    config = true
+    config = function()
+      require('gitsigns').setup({
+        signs = {
+          add          = { text = '│' },
+          change       = { text = '│' },
+          delete       = { text = '_' },
+          topdelete    = { text = '‾' },
+          changedelete = { text = '~' },
+          untracked    = { text = '┆' },
+        },
+        signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+        numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+        linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+        word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+        current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+        current_line_blame_opts = {
+          virt_text = true,
+          virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+          delay = 300,
+          ignore_whitespace = false,
+        },
+        on_attach = function(bufnr)
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+          end
+
+          -- Navigation
+          map('n', ']c', function()
+            if vim.wo.diff then return ']c' end
+            vim.schedule(function() gs.next_hunk() end)
+            return '<Ignore>'
+          end, {expr=true, desc = "Next hunk"})
+
+          map('n', '[c', function()
+            if vim.wo.diff then return '[c' end
+            vim.schedule(function() gs.prev_hunk() end)
+            return '<Ignore>'
+          end, {expr=true, desc = "Previous hunk"})
+
+          -- Actions
+          map('n', '<leader>hs', gs.stage_hunk, {desc = "Stage hunk"})
+          map('n', '<leader>hr', gs.reset_hunk, {desc = "Reset hunk"})
+          map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, {desc = "Stage hunk"})
+          map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, {desc = "Reset hunk"})
+          map('n', '<leader>hS', gs.stage_buffer, {desc = "Stage buffer"})
+          map('n', '<leader>hu', gs.undo_stage_hunk, {desc = "Undo stage hunk"})
+          map('n', '<leader>hR', gs.reset_buffer, {desc = "Reset buffer"})
+          map('n', '<leader>hp', gs.preview_hunk, {desc = "Preview hunk"})
+          map('n', '<leader>hb', function() gs.blame_line{full=true} end, {desc = "Blame line"})
+          map('n', '<leader>tb', gs.toggle_current_line_blame, {desc = "Toggle blame"})
+          map('n', '<leader>hd', gs.diffthis, {desc = "Diff this"})
+          map('n', '<leader>hD', function() gs.diffthis('~') end, {desc = "Diff this ~"})
+          map('n', '<leader>td', gs.toggle_deleted, {desc = "Toggle deleted"})
+
+          -- Text object
+          map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>', {desc = "Select hunk"})
+        end
+      })
+    end,
   },
 
   -- Which-key for keybinding help
@@ -284,6 +368,18 @@ vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>', { desc = "Find Fi
 vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>', { desc = "Live Grep" })
 vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>', { desc = "Buffers" })
 vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>', { desc = "Help Tags" })
+vim.keymap.set('n', '<leader>fo', ':Telescope oldfiles<CR>', { desc = "Recent Files" })
+vim.keymap.set('n', '<leader>fc', ':Telescope commands<CR>', { desc = "Commands" })
+vim.keymap.set('n', '<leader>fs', ':Telescope git_status<CR>', { desc = "Git Status" })
+vim.keymap.set('n', '<leader>fd', ':Telescope diagnostics<CR>', { desc = "Diagnostics" })
+
+-- LazyGit keymaps
+vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = "LazyGit" })
+vim.keymap.set('n', '<leader>gl', ':LazyGitCurrentFile<CR>', { desc = "LazyGit Current File" })
+vim.keymap.set('n', '<leader>gc', ':LazyGitFilterCurrentFile<CR>', { desc = "LazyGit Commits (Current File)" })
+
+-- Ctrl+P for file finding (like old CtrlP/FZF)
+vim.keymap.set('n', '<C-p>', ':Telescope find_files<CR>', { desc = "Find Files (Ctrl+P)" })
 
 -- Better window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h")
@@ -300,11 +396,27 @@ vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
 -- IME auto-switch (macOS)
+-- Save current input source on InsertEnter and restore English on InsertLeave
+local saved_input_source = nil
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+  pattern = "*",
+  callback = function()
+    -- Save current input source when entering insert mode
+    saved_input_source = vim.fn.system("macism"):gsub("%s+", "")
+  end,
+})
+
 vim.api.nvim_create_autocmd("InsertLeave", {
   pattern = "*",
   callback = function()
+    -- Switch to English when leaving insert mode
     vim.fn.system("macism com.apple.keylayout.ABC")
   end,
 })
+
+-- Also switch to English when entering command mode
+vim.keymap.set("i", "<Esc>", "<Esc>:silent !macism com.apple.keylayout.ABC<CR>", { silent = true })
+vim.keymap.set("i", "<C-c>", "<C-c>:silent !macism com.apple.keylayout.ABC<CR>", { silent = true })
 
 print("Neovim LSP configuration loaded! Run :Mason to manage LSP servers.")

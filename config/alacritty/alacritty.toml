@@ -1,0 +1,97 @@
+# ============================================================================
+# Alacritty Terminal Configuration
+# ============================================================================
+# Quick Reference:
+#   Copy/Paste: Ctrl+Shift+C / Ctrl+Shift+V
+#   Vi Mode: Shift+Ctrl+Space
+#   Scroll (outside tmux): Cmd+Shift+K/J (line), Cmd+Shift+U/D (page)
+#   Scroll (inside tmux): Use Option+k/j (tmux handles it)
+#   Tmux shortcuts: Cmd+T (new window), Cmd+D (split), Cmd+1-9 (jump)
+#
+# Full keybindings: See ~/.dotfiles/README.md
+# ============================================================================
+
+# Theme import (commented out - add theme file if needed)
+# import = [
+#   "~/.config/alacritty/themes/themes/google.toml"
+# ]
+[scrolling]
+history = 100000
+
+[font]
+normal = { family = "FiraCode Nerd Font", style = "Regular" }
+bold = { family = "FiraCode Nerd Font", style = "Bold" }
+size = 18
+
+[cursor]
+vi_mode_style = "Beam"
+
+# Terminal settings
+[terminal]
+# Make Option key work as Alt/Meta for tmux scrolling
+osc52 = "CopyPaste"
+
+[window]
+# IMPORTANT: Allow Option key to work as Alt/Meta modifier for tmux scrolling
+# Without this, Option+k/j won't work for tmux scroll
+# macOS default uses Option for special characters (é, ñ, etc)
+option_as_alt = "Both"
+
+# Vi Mode configuration
+[hints]
+enabled = []
+
+[keyboard]
+bindings = [
+  # Vi Mode - Enter/Exit and Copy
+  { key = "Space", mods = "Shift|Control", mode = "~Search", action = "ToggleViMode" },
+  { key = "Y", mode = "Vi|~Search", action = "Copy" },
+  { key = "Y", mods = "Control", mode = "Vi|~Search", action = "Copy" },
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+  { key = "Return", mode = "Vi|~Search", action = "CopySelection" },
+
+  # Keyboard scroll - Using Cmd+Shift (safest for macOS)
+  { key = "K", mods = "Command|Shift", action = "ScrollLineUp" },        # Cmd+Shift+K 위로
+  { key = "J", mods = "Command|Shift", action = "ScrollLineDown" },      # Cmd+Shift+J 아래로
+  { key = "U", mods = "Command|Shift", action = "ScrollHalfPageUp" },    # Cmd+Shift+U 반페이지 위
+  { key = "D", mods = "Command|Shift", action = "ScrollHalfPageDown" },  # Cmd+Shift+D 반페이지 아래
+  { key = "B", mods = "Command|Shift", action = "ScrollPageUp" },        # Cmd+Shift+B 페이지 위
+  { key = "F", mods = "Command|Shift", action = "ScrollPageDown" },      # Cmd+Shift+F 페이지 아래
+
+  # Tmux integration bindings
+  { key = "T", mods = "Command", chars = "\u0011c" },
+  { key = "W", mods = "Command", chars = "\u0011X" },
+  { key = "B", mods = "Command", chars = "\u0011B" },
+  { key = "B", mods = "Command|Shift", chars = "\u0011J" },
+  { key = "D", mods = "Command", chars = "\u0011\u0025"},
+  { key = "D", mods = "Command|Shift", chars = "\u0011\u0022"},
+  { key = "O", mods = "Command", chars = "\u0011\u006f"},
+  { key = "O", mods = "Command|Shift", chars = "\u0011\u000f" },
+  { key = "Key1", mods = "Command", chars = "\u0011\u0031" },
+  { key = "Key2", mods = "Command", chars = "\u0011\u0032" },
+  { key = "Key3", mods = "Command", chars = "\u0011\u0033" },
+  { key = "Key4", mods = "Command", chars = "\u0011\u0034" },
+  { key = "Key5", mods = "Command", chars = "\u0011\u0035" },
+  { key = "Key6", mods = "Command", chars = "\u0011\u0036" },
+  { key = "Key7", mods = "Command", chars = "\u0011\u0037" },
+  { key = "Key8", mods = "Command", chars = "\u0011\u0038" },
+  { key = "Key9", mods = "Command", chars = "\u0011\u0039" },
+
+  { key = "E", mods = "Command", chars = "\u0011w" },
+
+  { key = "Left", mods = "Command", chars = "\u0011H" },
+  { key = "Down", mods = "Command", chars = "\u0011J" },
+  { key = "Up", mods = "Command", chars = "\u0011K" },
+  { key = "Right", mods = "Command", chars = "\u0011L" },
+
+
+  { key = "Comma", mods = "Alt|Command", chars = "\u0011\u0008" },
+  { key = "Period", mods = "Alt|Command", chars = "\u0011\u000c" }
+
+]
+
+# Selection configuration
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"

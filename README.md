@@ -18,15 +18,19 @@ A modern, organized dotfiles setup with environment separation (work/personal) a
 .dotfiles/
 ├── core/              # Core configuration files
 │   ├── .zshrc         # Zsh configuration
-│   ├── .vimrc         # Vim/Neovim configuration
+│   ├── .vimrc         # Vim configuration (legacy)
 │   ├── .tmux.conf     # Tmux configuration
 │   ├── .gitconfig     # Git configuration
 │   └── .p10k.zsh      # Powerlevel10k theme
+├── config/            # Modern application configs
+│   ├── nvim/          # Neovim Lua config (modern)
+│   │   ├── init.lua   # Main Neovim config with Lazy.nvim
+│   │   └── lazy-lock.json  # Plugin version lock
+│   └── alacritty/     # Alacritty terminal config
+│       └── alacritty.toml
 ├── env/               # Environment-specific configs
 │   ├── work.zsh       # Work environment settings
 │   └── personal.zsh   # Personal environment settings
-├── config/            # Application configs
-│   └── nvim/          # Neovim specific configs
 ├── manual/            # Manual installation resources
 │   └── homebrew/
 │       └── Brewfile   # Homebrew packages list
@@ -66,18 +70,153 @@ cd ~/.dotfiles
 
 ## Key Bindings
 
-### Vim
-- `<leader><tab>` - Fuzzy file finder
-- `<leader>q` - Buffer list
-- `gd` - Go to definition (CoC)
-- `<leader>rn` - Rename symbol (CoC)
-- `<tab><tab>` - Switch to previous buffer
-- `<tab>h/j/k/l` - Navigate windows
+### Neovim (Modern Config with Lazy.nvim)
+
+**Leader Key**: `<Space>`
+
+#### Git Operations (LazyGit + Gitsigns)
+| Key | Description |
+|-----|-------------|
+| `<Space>gg` | Open LazyGit (full git UI) |
+| `<Space>gl` | LazyGit for current file |
+| `<Space>gc` | LazyGit commits for current file |
+| `]c` / `[c` | Next/Previous git hunk |
+| `<leader>hp` | Preview hunk |
+| `<leader>hs` | Stage hunk |
+| `<leader>hr` | Reset hunk |
+| `<leader>hb` | Show git blame for line |
+| `<leader>tb` | Toggle git blame display |
+
+**LazyGit Controls** (inside LazyGit):
+- `Tab`/`Shift+Tab` - Navigate panels
+- `1-5` - Jump to panel (Status/Files/Branches/Commits/Stash)
+- `Space` - Stage/unstage
+- `c` - Commit
+- `p`/`P` - Push/Pull
+- `l` - View log
+- `d` - View diff
+- `q` - Quit
+
+#### File Navigation (Telescope)
+| Key | Description |
+|-----|-------------|
+| `Ctrl+p` | Quick file finder (CtrlP style) |
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep (search in files) |
+| `<leader>fb` | Browse buffers |
+| `<leader>fs` | Git status |
+| `<leader>fd` | Show diagnostics |
+| `<leader>e` | Toggle NvimTree |
+
+#### LSP & Code Navigation
+| Key | Description |
+|-----|-------------|
+| `gd` | Go to definition |
+| `gD` | Go to declaration |
+| `gi` | Go to implementation |
+| `gr` | Show references |
+| `K` | Show hover documentation |
+| `<leader>vrn` | Rename symbol |
+| `<leader>vca` | Code actions |
+| `<leader>f` | Format code |
+| `[d`/`]d` | Next/Previous diagnostic |
+
+#### Window & Editing
+| Key | Description |
+|-----|-------------|
+| `Ctrl+h/j/k/l` | Navigate windows (vim style) |
+| `J`/`K` (visual) | Move selected lines up/down |
+| `<`/`>` (visual) | Decrease/increase indent (persistent) |
+
+#### IME (한영 전환)
+| Key | Description |
+|-----|-------------|
+| `ESC` | Switch to English (instant) |
+| `Ctrl+c` | Switch to English (instant) |
 
 ### Tmux
-- `Ctrl-a` - Prefix (if configured)
-- `Prefix + |` - Vertical split
-- `Prefix + -` - Horizontal split
+
+**Prefix Key**: `Ctrl+q` (changed from default `Ctrl+b`)
+
+#### Scrolling (Keyboard & Mouse)
+| Key | Description |
+|-----|-------------|
+| `Option+k` or `Option+↑` | Scroll up (line) |
+| `Option+j` or `Option+↓` | Scroll down (line) |
+| `Option+u` | Scroll up (half page) |
+| `Option+d` | Scroll down (half page) |
+| `PageUp` | Enter copy mode & scroll up |
+| **Mouse wheel** | Scroll (automatic) |
+
+#### Pane Management
+| Key | Description |
+|-----|-------------|
+| `Prefix \|` | Split vertically (current path) |
+| `Prefix -` | Split horizontally (current path) |
+| `Prefix h/j/k/l` | Navigate panes (vim style) |
+| `Prefix H/J/K/L` | Resize panes (repeatable) |
+| `Prefix Tab` | Cycle through panes |
+| `Prefix X` | Kill pane (no confirmation) |
+| `Prefix B` | Break pane to new window |
+
+#### Window Management
+| Key | Description |
+|-----|-------------|
+| `Prefix c` | New window (current path) |
+| `Prefix Ctrl+h/l` | Previous/Next window |
+| `Prefix </>` | Swap window left/right |
+
+#### Copy Mode (Vi-style)
+| Key | Description |
+|-----|-------------|
+| `Prefix [` | Enter copy mode |
+| `v` | Begin selection (copy mode) |
+| `y` | Copy and exit (copy mode) |
+| `Prefix p` | Paste |
+
+#### Misc
+| Key | Description |
+|-----|-------------|
+| `Prefix r` | Reload tmux config |
+| `Prefix Ctrl+k` | Clear screen + history |
+
+### Alacritty
+
+#### Terminal Features
+| Key | Description |
+|-----|-------------|
+| `Ctrl+Shift+C` | Copy |
+| `Ctrl+Shift+V` | Paste |
+| `Shift+Ctrl+Space` | Toggle Vi mode |
+
+#### Scrolling (macOS, outside tmux)
+| Key | Description |
+|-----|-------------|
+| `Cmd+Shift+K/J` | Scroll line up/down |
+| `Cmd+Shift+U/D` | Scroll half page up/down |
+| `Cmd+Shift+B/F` | Scroll full page up/down |
+
+**Note**: Inside tmux, use tmux scroll keys (`Option+k/j`)
+
+#### Tmux Integration (macOS)
+| Key | Description |
+|-----|-------------|
+| `Cmd+T` | New tmux window |
+| `Cmd+W` | Close tmux window |
+| `Cmd+D` | Vertical split |
+| `Cmd+Shift+D` | Horizontal split |
+| `Cmd+1-9` | Jump to window 1-9 |
+| `Cmd+O` | Next pane |
+| `Cmd+←/↓/↑/→` | Navigate panes |
+
+## Configuration Files
+
+```
+~/.config/nvim/init.lua           # Neovim config (modern Lua)
+~/.config/alacritty/alacritty.toml # Alacritty terminal
+~/.tmux.conf -> ~/.dotfiles/core/.tmux.conf  # Tmux config
+~/.zshrc -> ~/.dotfiles/core/.zshrc          # Zsh shell
+```
 
 ## Environment Switching
 
@@ -138,7 +277,18 @@ git pull
 
 ## What's Been Fixed
 
-### Recent Improvements (2024)
+### Recent Improvements (2025-10-13)
+- ✅ **Migrated to modern Neovim Lua config** with Lazy.nvim
+- ✅ **Added LazyGit integration** for full git UI in nvim
+- ✅ **Enhanced Gitsigns** with blame, hunk navigation, and keymaps
+- ✅ **Added LSP support** with Mason, nvim-cmp, Telescope
+- ✅ **IME auto-switch** (ESC → instant English on macOS)
+- ✅ **Tmux keyboard scroll** with Option+k/j/u/d
+- ✅ **Alacritty config** with tmux integration and Option-as-Alt
+- ✅ **Complete keybindings documentation** in README
+- ✅ **install.sh updated** to handle modern configs
+
+### Previous Improvements (2024)
 - ✅ Fixed install.sh condition bug
 - ✅ Updated deprecated packages (zinit, fast-syntax-highlighting)
 - ✅ Replaced `exa` with `eza`

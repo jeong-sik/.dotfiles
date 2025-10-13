@@ -153,12 +153,44 @@ ln -sf "$BASEDIR/.npmrc" "$HOME/.npmrc"
 ln -sf "$BASEDIR/.gitignore-global" "$HOME/.gitignore-global"
 ln -sf "$BASEDIR/.ideavimrc" "$HOME/.ideavimrc"
 
-# Neovim config
+# Neovim config (Modern Lua config)
 log_info "Setting up Neovim config..."
 mkdir -p ~/.config/nvim
-ln -sf "$BASEDIR/core/.vimrc" ~/.config/nvim/init.vim
-ln -sf "$BASEDIR/coc-settings.json" ~/.config/nvim/coc-settings.json
-log_success "Neovim config linked"
+if [[ -f "$BASEDIR/config/nvim/init.lua" ]]; then
+    # Backup existing config
+    if [[ -e ~/.config/nvim/init.lua && ! -L ~/.config/nvim/init.lua ]]; then
+        log_warn "Backing up existing init.lua to init.lua.backup"
+        mv ~/.config/nvim/init.lua ~/.config/nvim/init.lua.backup
+    fi
+    ln -sf "$BASEDIR/config/nvim/init.lua" ~/.config/nvim/init.lua
+    log_success "Neovim init.lua linked"
+
+    # Link lazy-lock.json if exists
+    if [[ -f "$BASEDIR/config/nvim/lazy-lock.json" ]]; then
+        ln -sf "$BASEDIR/config/nvim/lazy-lock.json" ~/.config/nvim/lazy-lock.json
+        log_success "Neovim lazy-lock.json linked"
+    fi
+else
+    # Fallback to old vim config
+    ln -sf "$BASEDIR/core/.vimrc" ~/.config/nvim/init.vim
+    ln -sf "$BASEDIR/coc-settings.json" ~/.config/nvim/coc-settings.json
+    log_success "Neovim config linked (legacy)"
+fi
+
+# Alacritty config
+if [[ -f "$BASEDIR/config/alacritty/alacritty.toml" ]]; then
+    log_info "Setting up Alacritty config..."
+    mkdir -p ~/.config/alacritty
+
+    # Backup existing config
+    if [[ -e ~/.config/alacritty/alacritty.toml && ! -L ~/.config/alacritty/alacritty.toml ]]; then
+        log_warn "Backing up existing alacritty.toml to alacritty.toml.backup"
+        mv ~/.config/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml.backup
+    fi
+
+    ln -sf "$BASEDIR/config/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
+    log_success "Alacritty config linked"
+fi
 
 # Create .zshrc.local with environment selection
 log_info "Creating .zshrc.local..."
