@@ -22,10 +22,14 @@ brew "bottom"        # modern top/htop
 # Development tools
 brew "neovim"
 brew "tmux"
+brew "lazygit"       # Git TUI (for nvim integration)
 brew "gh"            # GitHub CLI
 brew "jq"            # JSON processor
 brew "yq"            # YAML processor
 brew "httpie"        # modern curl for APIs
+
+# macOS utilities
+brew "macism"        # IME switcher for nvim (한영 전환)
 
 # Language tools
 brew "pyenv"
@@ -47,6 +51,8 @@ brew "watchman"      # File watching service
 brew "tree"          # Directory tree viewer
 
 # macOS specific
-cask "font-meslo-lg-nerd-font"  # For terminal icons
+cask "alacritty"                 # Modern GPU-accelerated terminal
+cask "font-meslo-lg-nerd-font"   # For p10k theme
+cask "font-fira-code-nerd-font"  # For Alacritty (current config)
 cask "rectangle"                 # Window management
-cask "alt-tab"                  # Better app switcher
+cask "alt-tab"                   # Better app switcher
