@@ -240,6 +240,11 @@ elif hash vim 2>/dev/null; then
   alias vi='vim'
 fi
 
+# zoxide
+if hash zoxide 2>/dev/null; then
+  eval "$(zoxide init zsh --cmd j)"
+fi
+
 # Load local zshrc
 if [ -f ~/.zshrc.local ]; then
   source ~/.zshrc.local
