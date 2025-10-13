@@ -22,6 +22,7 @@ brew "bottom"        # modern top/htop
 # Development tools
 brew "neovim"
 brew "tmux"
+brew "gitmux"        # Git info for tmux status bar
 brew "lazygit"       # Git TUI (for nvim integration)
 brew "gh"            # GitHub CLI
 brew "jq"            # JSON processor
@@ -34,9 +35,9 @@ brew "macism"        # IME switcher for nvim (한영 전환)
 # Language tools
 brew "pyenv"
 brew "pyenv-virtualenv"
-# brew "nvm"         # Skip - already installed via install.sh
-brew "rustup"
-brew "go"
+brew "node"          # Base Node.js (nvm also installed via install.sh)
+# brew "rustup"      # Uncomment if you use Rust
+# brew "go"          # Uncomment if you use Go
 
 # Container tools
 # brew "docker"        # Skip if Docker Desktop installed
@@ -44,7 +45,7 @@ brew "go"
 # brew "colima"        # Alternative to Docker Desktop (conflicts if both installed)
 
 # Optional productivity tools
-brew "starship"      # Cross-shell prompt (alternative to p10k)
+# brew "starship"    # Cross-shell prompt (already using p10k)
 brew "zoxide"        # Smart cd command
 brew "direnv"        # Per-project environment variables
 brew "watchman"      # File watching service

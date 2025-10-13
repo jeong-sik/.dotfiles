@@ -111,6 +111,33 @@ require("lazy").setup({
     'nvim-telescope/telescope.nvim',
     tag = '0.1.5',
     dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('telescope').setup({
+        defaults = {
+          file_ignore_patterns = {
+            "node_modules",
+            ".git/",
+            "dist/",
+            "build/",
+            "target/",
+            "vendor/",
+            "%.lock",
+            "__pycache__",
+            "%.pyc",
+          },
+          layout_config = {
+            horizontal = {
+              preview_width = 0.55,
+            },
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,  -- Show hidden files
+          },
+        },
+      })
+    end,
   },
 
   -- LSP Configuration
@@ -357,6 +384,66 @@ require("lazy").setup({
     end,
     opts = {}
   },
+
+  -- Terminal toggle
+  {
+    'akinsho/toggleterm.nvim',
+    version = "*",
+    config = function()
+      require("toggleterm").setup({
+        size = 20,
+        open_mapping = [[<c-\>]],
+        direction = 'float',
+        float_opts = {
+          border = 'curved',
+        },
+      })
+    end,
+  },
+
+  -- Project management
+  {
+    "ahmedkhalf/project.nvim",
+    config = function()
+      require("project_nvim").setup({
+        detection_methods = { "pattern", "lsp" },
+        patterns = { ".git", "package.json", "Cargo.toml", "go.mod" },
+      })
+    end,
+  },
+
+  -- File bookmarks
+  {
+    "ThePrimeagen/harpoon",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("harpoon").setup()
+    end,
+  },
+
+  -- TODO comments highlight
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("todo-comments").setup()
+    end,
+  },
+
+  -- Color highlighter
+  {
+    "norcalli/nvim-colorizer.lua",
+    config = function()
+      require('colorizer').setup()
+    end,
+  },
+
+  -- Markdown preview
+  {
+    "iamcco/markdown-preview.nvim",
+    build = "cd app && npm install",
+    ft = { "markdown" },
+  },
 })
 
 -- Keymaps
@@ -377,6 +464,23 @@ vim.keymap.set('n', '<leader>fd', ':Telescope diagnostics<CR>', { desc = "Diagno
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { desc = "LazyGit" })
 vim.keymap.set('n', '<leader>gl', ':LazyGitCurrentFile<CR>', { desc = "LazyGit Current File" })
 vim.keymap.set('n', '<leader>gc', ':LazyGitFilterCurrentFile<CR>', { desc = "LazyGit Commits (Current File)" })
+
+-- Harpoon keymaps
+vim.keymap.set('n', '<leader>a', function() require("harpoon.mark").add_file() end, { desc = "Harpoon Add" })
+vim.keymap.set('n', '<C-e>', function() require("harpoon.ui").toggle_quick_menu() end, { desc = "Harpoon Menu" })
+vim.keymap.set('n', '<leader>1', function() require("harpoon.ui").nav_file(1) end, { desc = "Harpoon 1" })
+vim.keymap.set('n', '<leader>2', function() require("harpoon.ui").nav_file(2) end, { desc = "Harpoon 2" })
+vim.keymap.set('n', '<leader>3', function() require("harpoon.ui").nav_file(3) end, { desc = "Harpoon 3" })
+vim.keymap.set('n', '<leader>4', function() require("harpoon.ui").nav_file(4) end, { desc = "Harpoon 4" })
+
+-- TODO comments keymaps
+vim.keymap.set('n', ']t', function() require("todo-comments").jump_next() end, { desc = "Next TODO" })
+vim.keymap.set('n', '[t', function() require("todo-comments").jump_prev() end, { desc = "Previous TODO" })
+vim.keymap.set('n', '<leader>ft', ':TodoTelescope<CR>', { desc = "Find TODOs" })
+
+-- Markdown preview
+vim.keymap.set('n', '<leader>mp', ':MarkdownPreview<CR>', { desc = "Markdown Preview" })
+vim.keymap.set('n', '<leader>ms', ':MarkdownPreviewStop<CR>', { desc = "Stop Preview" })
 
 -- Ctrl+P for file finding (like old CtrlP/FZF)
 vim.keymap.set('n', '<C-p>', ':Telescope find_files<CR>', { desc = "Find Files (Ctrl+P)" })
