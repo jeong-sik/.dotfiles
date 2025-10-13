@@ -306,7 +306,95 @@ Ctrl+q c        # 새 윈도우
 | `Cmd+O` | Next pane |
 | `Cmd+←/↓/↑/→` | Navigate panes |
 
-## Installed Plugins & Tools
+## What Does Each Tool Do?
+
+### Core Workflow Tools
+
+#### **LazyGit** (`<Space>gg`)
+**뭐하는 건가**: Git을 TUI(Text UI)로 조작
+**언제 쓰나**:
+- 커밋, 푸시, 풀 하나의 화면에서 처리
+- 브랜치 관리, 충돌 해결
+- git 명령어 외울 필요 없음
+
+#### **Harpoon** (`<leader>a` → `Ctrl+e` → `<leader>1-4`)
+**뭐하는 건가**: 자주 쓰는 파일을 북마크
+**언제 쓰나**:
+- 큰 프로젝트에서 4-5개 핵심 파일 왔다갔다
+- `<leader>a`로 추가 → `<leader>1`로 즉시 이동
+- Telescope보다 빠름
+
+**사용 예시**:
+```
+1번: src/main.ts (메인 로직)
+2번: src/types.ts (타입 정의)
+3번: README.md (문서)
+4번: package.json (설정)
+```
+
+#### **toggleterm** (`Ctrl+\`)
+**뭐하는 건가**: nvim 안에서 터미널 띄우기
+**언제 쓰나**:
+- 코드 수정 → 바로 테스트 실행
+- nvim 안 나가고 git, npm 명령 실행
+- 플로팅 윈도우라 가리지 않음
+
+#### **TODO Comments** (`]t` / `[t` / `<leader>ft`)
+**뭐하는 건가**: 코드 안의 TODO/FIXME 하이라이트 & 검색
+**언제 쓰나**:
+- 나중에 할 것 표시: `// TODO: 이거 리팩토링`
+- `]t`로 다음 TODO 점프
+- `<leader>ft`로 프로젝트 전체 TODO 검색
+
+#### **Telescope** (`Ctrl+p` / `<leader>fg`)
+**뭐하는 건가**: 파일/텍스트 빠른 검색
+**언제 쓰나**:
+- `Ctrl+p`: 파일명으로 찾기 (ex: "user.ts")
+- `<leader>fg`: 코드 내용으로 찾기 (ex: "function login")
+- `<leader>ft`: TODO 전체 검색
+
+#### **Gitsigns** (`]c` / `[c` / `<leader>hp`)
+**뭐하는 건가**: 파일 옆에 git 변경사항 표시
+**언제 쓰나**:
+- 어느 줄 수정했는지 한눈에
+- 각 줄 끝에 누가 언제 수정했는지 (blame)
+- `]c`로 다음 변경사항 이동
+
+### Tmux Session Management
+
+#### **tmux-resurrect + continuum**
+**뭐하는 건가**: tmux 세션을 저장/복구
+**언제 쓰나**:
+- 맥 재부팅 → tmux 실행 → 모든 윈도우/패널 자동 복원
+- 15분마다 자동 저장
+- 어제 작업하던 화면 그대로
+
+**복원되는 것**:
+- 윈도우/패널 레이아웃
+- 실행 중이던 프로그램 (nvim 포함)
+- 디렉토리 위치
+
+### Markdown Preview
+**뭐하는 건가**: 마크다운 실시간 미리보기
+**언제 쓰나**:
+- README.md 작성하면서 브라우저로 확인
+- `<leader>mp` → 브라우저 열림 → 수정하면 자동 새로고침
+
+### Project.nvim
+**뭐하는 건가**: 프로젝트 루트 자동 감지
+**언제 쓰나**:
+- 하위 폴더에서 nvim 열어도 `.git` 기준으로 루트 찾음
+- Telescope, LSP가 프로젝트 전체 대상으로 동작
+
+### nvim-colorizer
+**뭐하는 건가**: 색상 코드를 실제 색으로 표시
+**언제 쓰나**:
+- CSS: `#ff0000` ← 빨간색으로 보임
+- 색 고를 때 편함
+
+---
+
+## Installed Plugins & Tools (Full List)
 
 ### Neovim Plugins (via Lazy.nvim)
 - **Git**: LazyGit (TUI), Gitsigns (inline blame & hunks)
