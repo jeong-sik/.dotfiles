@@ -11,6 +11,9 @@ A modern, organized dotfiles setup with environment separation (work/personal) a
 - 📦 **Automatic Installation**: Smart install script with dependency management
 - 🎨 **Beautiful Terminal**: Powerlevel10k + modern syntax highlighting
 - 💻 **Cross-platform**: Works on macOS and Linux
+- 🚀 **Full Dev Stack**: Nvim (LSP, Git, Terminal) + Tmux (Session Mgmt) + Alacritty
+- 💾 **Auto Session Restore**: Never lose your work (tmux-resurrect + continuum)
+- 🎯 **Productivity Plugins**: File bookmarks, TODO tracking, project detection
 
 ## Directory Structure
 
@@ -68,6 +71,61 @@ cd ~/.dotfiles
 | `du` | `dust` | More intuitive disk usage |
 | `cd` | `zoxide` | Smarter directory jumping |
 
+## Quick Start Guide
+
+### The 3-Tool Combo: Alacritty + Tmux + Nvim
+
+```
+┌─────────────────────────────────────────────────┐
+│ Alacritty (터미널)                               │
+│  └── Tmux (세션/윈도우/패널 관리)                  │
+│       └── Nvim (코드 편집)                        │
+└─────────────────────────────────────────────────┘
+```
+
+**핵심 워크플로우**:
+1. **Alacritty** 열기 → Tmux 자동 시작
+2. **Tmux** 안에서 패널/윈도우 생성 → 다중 작업
+3. **Nvim** 열기 → 코드 편집, git 관리, 터미널 토글
+4. 재부팅해도 **Tmux가 모든 세션 복원** ✅
+
+### Most Used Keys (외우면 끝)
+
+#### 전체에서 가장 많이 쓰는 것
+```bash
+Ctrl+q          # Tmux prefix (모든 tmux 명령의 시작)
+<Space>         # Nvim leader (모든 nvim 명령의 시작)
+Option+k/j      # Tmux 스크롤 (어디서나)
+Ctrl+\          # Nvim 터미널 토글
+<Space>gg       # LazyGit 열기 (git UI)
+ESC             # 영문 전환 (즉시)
+```
+
+#### 파일 작업
+```bash
+Ctrl+p          # 파일 찾기 (Telescope)
+<Space>a        # 파일 북마크 (Harpoon)
+Ctrl+e          # 북마크 메뉴
+<Space>1-4      # 북마크 1-4 이동
+```
+
+#### Git 작업
+```bash
+<Space>gg       # LazyGit (전체)
+]c / [c         # 다음/이전 변경사항
+<Space>hp       # 변경사항 미리보기
+```
+
+#### Tmux 필수
+```bash
+Ctrl+q |        # 세로 분할
+Ctrl+q -        # 가로 분할
+Ctrl+q h/j/k/l  # 패널 이동
+Ctrl+q c        # 새 윈도우
+```
+
+---
+
 ## Key Bindings
 
 ### Neovim (Modern Config with Lazy.nvim)
@@ -106,7 +164,36 @@ cd ~/.dotfiles
 | `<leader>fb` | Browse buffers |
 | `<leader>fs` | Git status |
 | `<leader>fd` | Show diagnostics |
+| `<leader>ft` | Find TODOs |
 | `<leader>e` | Toggle NvimTree |
+
+#### Terminal
+| Key | Description |
+|-----|-------------|
+| `Ctrl+\` | Toggle floating terminal |
+
+#### File Bookmarks (Harpoon)
+| Key | Description |
+|-----|-------------|
+| `<leader>a` | Add current file to bookmarks |
+| `Ctrl+e` | Toggle bookmark menu |
+| `<leader>1` | Jump to bookmark 1 |
+| `<leader>2` | Jump to bookmark 2 |
+| `<leader>3` | Jump to bookmark 3 |
+| `<leader>4` | Jump to bookmark 4 |
+
+#### TODO Navigation
+| Key | Description |
+|-----|-------------|
+| `]t` | Next TODO comment |
+| `[t` | Previous TODO comment |
+| `<leader>ft` | Search all TODOs (Telescope) |
+
+#### Markdown
+| Key | Description |
+|-----|-------------|
+| `<leader>mp` | Open markdown preview |
+| `<leader>ms` | Stop markdown preview |
 
 #### LSP & Code Navigation
 | Key | Description |
@@ -174,11 +261,21 @@ cd ~/.dotfiles
 | `y` | Copy and exit (copy mode) |
 | `Prefix p` | Paste |
 
+#### Session Management (TPM + Resurrect + Continuum)
+| Key | Description |
+|-----|-------------|
+| `Prefix Ctrl+s` | Save session manually |
+| `Prefix Ctrl+r` | Restore session manually |
+| **Auto-save** | Every 15 minutes (automatic) |
+| **Auto-restore** | On tmux start (automatic) |
+
 #### Misc
 | Key | Description |
 |-----|-------------|
 | `Prefix r` | Reload tmux config |
 | `Prefix Ctrl+k` | Clear screen + history |
+| `Prefix I` | Install plugins (after config change) |
+| `Prefix U` | Update plugins |
 
 ### Alacritty
 
@@ -208,6 +305,30 @@ cd ~/.dotfiles
 | `Cmd+1-9` | Jump to window 1-9 |
 | `Cmd+O` | Next pane |
 | `Cmd+←/↓/↑/→` | Navigate panes |
+
+## Installed Plugins & Tools
+
+### Neovim Plugins (via Lazy.nvim)
+- **Git**: LazyGit (TUI), Gitsigns (inline blame & hunks)
+- **LSP**: Mason (LSP installer), nvim-lspconfig, nvim-cmp (completion)
+- **Search**: Telescope (fuzzy finder), Treesitter (syntax)
+- **Productivity**:
+  - Harpoon (file bookmarks)
+  - toggleterm (floating terminal)
+  - project.nvim (auto-detect project root)
+  - todo-comments (TODO/FIXME highlight & search)
+- **Editing**: autopairs, Comment.nvim, which-key
+- **UI**: tokyonight (theme), lualine (statusline), nvim-tree (file explorer)
+- **Extras**: nvim-colorizer (color preview), markdown-preview
+
+### Tmux Plugins (via TPM)
+- **tmux-resurrect**: Manual session save/restore (Prefix + Ctrl+s/r)
+- **tmux-continuum**: Auto-save every 15min + auto-restore on start
+
+### CLI Tools (via Homebrew)
+- **Modern replacements**: eza, bat, fd, ripgrep, delta, dust, bottom
+- **Dev tools**: neovim, tmux, lazygit, gitmux, gh, jq, yq
+- **macOS**: macism (IME switcher), alacritty
 
 ## Configuration Files
 
