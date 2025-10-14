@@ -56,7 +56,7 @@ bindings = [
   { key = "J", mods = "Command|Shift", action = "ScrollLineDown" },      # Cmd+Shift+J 아래로
   { key = "U", mods = "Command|Shift", action = "ScrollHalfPageUp" },    # Cmd+Shift+U 반페이지 위
   { key = "D", mods = "Command|Shift", action = "ScrollHalfPageDown" },  # Cmd+Shift+D 반페이지 아래
-  { key = "B", mods = "Command|Shift", action = "ScrollPageUp" },        # Cmd+Shift+B 페이지 위
+  # { key = "B", mods = "Command|Shift", action = "ScrollPageUp" },      # Cmd+Shift+B 페이지 위 (tmux와 충돌)
   { key = "F", mods = "Command|Shift", action = "ScrollPageDown" },      # Cmd+Shift+F 페이지 아래
 
   # Tmux integration bindings

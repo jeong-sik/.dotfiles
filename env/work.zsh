@@ -12,9 +12,6 @@ export GIT_COMMITTER_EMAIL="vincent.dev@company.com"
 alias vpn='open -a "Company VPN"'
 alias jira='open https://company.atlassian.net'
 
-# Node.js settings for work projects
-export NPM_CONFIG_REGISTRY="https://npm.company.com"
-
 # AWS profiles
 export AWS_PROFILE="work-dev"
 
