@@ -29,7 +29,8 @@ vi_mode_style = "Beam"
 # Terminal settings
 [terminal]
 # Make Option key work as Alt/Meta for tmux scrolling
-osc52 = "CopyPaste"
+# OSC 52: OnlyCopy prevents auto-paste when clipboard changes
+osc52 = "OnlyCopy"
 
 [window]
 # IMPORTANT: Allow Option key to work as Alt/Meta modifier for tmux scrolling

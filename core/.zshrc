@@ -104,6 +104,99 @@ alias 니=ls
 alias ㅣㄴ=ls
 alias ㄴㅣ=ls
 
+# Modern CLI tools (Rust-based, faster alternatives)
+# grep → rg (53x faster, respects .gitignore)
+alias grep='rg'
+alias grepc='rg --context'
+
+# cat → bat (syntax highlighting, line numbers, git diff)
+alias cat='bat --paging=never --style=plain'
+alias catn='bat --paging=never'  # with line numbers
+alias catp='bat'  # with paging
+
+# find → fd (68x faster, respects .gitignore)
+# NOTE: fd has different syntax than find, so not aliased by default
+# Use 'fd' directly instead:
+#   find . -name "*.js"  →  fd "\.js$"
+#   find . -type f       →  fd --type f
+# alias find='fd'  # DISABLED: breaks existing find commands
+
+# ls → eza (git status, colors, icons)
+alias ls='eza'
+alias ll='eza -l --git'
+alias la='eza -la --git'
+alias tree='eza --tree'
+
+# Claude Parallel Session (tmux + Alacritty)
+cps() {
+  if [ -z "$1" ]; then
+    echo "❌ Usage: cps <task-name>"
+    echo "Example: cps auth-refactor"
+    return 1
+  fi
+
+  # Create worktree
+  ~/me/scripts/parallel-session.sh "$1" || return 1
+
+  # Create new tmux window and start Claude
+  if [ -n "$TMUX" ]; then
+    # Already in tmux - create new window
+    tmux new-window -n "$1" -c ~/me-wt-$1 "claude"
+    echo "✅ New tmux window created: $1"
+  else
+    echo "⚠️  Not in tmux. Run manually:"
+    echo "   cd ~/me-wt-$1 && claude"
+  fi
+}
+
+# 4-Session Setup: Plan + 3 Parallel Sessions
+cps4() {
+  if [ -z "$1" ]; then
+    echo "❌ Usage: cps4 <base-name>"
+    echo "Example: cps4 feature"
+    echo ""
+    echo "Creates 4 tmux windows:"
+    echo "  1. feature-plan    (Plan Mode)"
+    echo "  2. feature-impl-1  (Implementation)"
+    echo "  3. feature-impl-2  (Implementation)"
+    echo "  4. feature-impl-3  (Implementation)"
+    return 1
+  fi
+
+  if [ -z "$TMUX" ]; then
+    echo "⚠️  Must be in tmux session!"
+    return 1
+  fi
+
+  local base="$1"
+
+  echo "🚀 Creating 4-session setup: $base"
+  echo ""
+
+  # Window 1: Plan Mode
+  echo "📝 Creating: ${base}-plan (Plan Mode)"
+  ~/me/scripts/parallel-session.sh "${base}-plan" || return 1
+  tmux new-window -n "${base}-plan" -c ~/me-wt-${base}-plan "claude --permission-mode plan"
+
+  # Window 2-4: Implementation
+  for i in 1 2 3; do
+    echo "💻 Creating: ${base}-impl-$i"
+    ~/me/scripts/parallel-session.sh "${base}-impl-$i" || return 1
+    tmux new-window -n "${base}-impl-$i" -c ~/me-wt-${base}-impl-$i "claude"
+  done
+
+  echo ""
+  echo "✅ 4-session setup complete!"
+  echo ""
+  echo "Windows created:"
+  echo "  Ctrl+b w  → See all windows"
+  echo "  Ctrl+b 0  → Go to window 0 (original)"
+  echo "  Ctrl+b 1  → ${base}-plan (Plan Mode)"
+  echo "  Ctrl+b 2  → ${base}-impl-1"
+  echo "  Ctrl+b 3  → ${base}-impl-2"
+  echo "  Ctrl+b 4  → ${base}-impl-3"
+}
+
 # fzf
 if [ -f ~/.fzf.zsh ]; then
   [ -z "$HISTFILE" ] && HISTFILE=$HOME/.zsh_history
@@ -310,3 +403,72 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_TERMINAL" ]; 
     # echo "Run 'tmux attach -t <session-name>' to connect"
   fi
 fi
+
+# API Keys from 1Password (via ~/.config/env-tokens)
+# Usage: op-exec your-command
+alias opr='op run --env-file ~/.config/env-tokens --'
+
+export GEMINI_API_KEY=$(op item get "gemini api key" --fields credential 2>/dev/null)
+
+
+# npm registry fix (override company VPN/MDM settings)
+export NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
+
+# Daily automation shortcuts (added by Claude Code)
+alias dashboard='~/me/scripts/dashboard.py --snapshot'
+alias morning='~/me/scripts/daily-morning.sh'
+alias evening='~/me/scripts/daily-evening.sh'
+alias planner='~/me/scripts/daily-planner.py'
+alias stats='~/me/scripts/achievement-stats.py'
+
+# Feature usage tracking (auto-added by Claude Code)
+_track_usage() {
+    ~/me/scripts/track-feature-usage.sh "$1" 2>/dev/null
+}
+
+# Override aliases with tracking
+alias dashboard='_track_usage dashboard && ~/me/scripts/dashboard.py --snapshot'
+alias planner='_track_usage daily-planner && ~/me/scripts/daily-planner.py'
+alias morning='_track_usage daily-morning && ~/me/scripts/daily-morning.sh'
+alias evening='_track_usage daily-evening && ~/me/scripts/daily-evening.sh'
+alias stats='_track_usage achievement-stats && ~/me/scripts/achievement-stats.py'
+
+# Second Brain Quick Access
+alias sb='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 search.py'
+alias sbh='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 hybrid_search.py'
+alias sbi='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 search.py'  # Interactive mode
+
+# ═══════════════════════════════════════════
+# Review Systems v7.1 (2025-10-20)
+# ═══════════════════════════════════════════
+alias vote="~/me/scripts/review/3.vote/quality-3ai.sh"
+alias 2v1="~/me/scripts/review/5.logic/2v1.sh"
+alias debate="~/me/scripts/review/2.debate/multi-expert.sh"
+alias pr-analyze="~/me/scripts/review/4.analysis/pr-3tier.sh"
+alias pr-hist="~/me/scripts/review/context/historical.sh"
+alias pr-sem="~/me/scripts/review/context/semantic.sh"
+alias pr-impact="~/me/scripts/review/context/impact.sh"
+
+# Quick access to review docs
+alias review-guide="cat ~/me/scripts/review/README.md"
+
+# Review Systems v7.1 (2025-10-20)
+alias vote="~/me/scripts/review/3.vote/quality-3ai.sh"
+alias 2v1="~/me/scripts/review/5.logic/2v1.sh"
+alias debate="~/me/scripts/review/2.debate/multi-expert.sh"
+alias pr-analyze="~/me/scripts/review/4.analysis/pr-3tier.sh"
+alias pr-hist="~/me/scripts/review/context/historical.sh"
+alias pr-sem="~/me/scripts/review/context/semantic.sh"
+alias pr-impact="~/me/scripts/review/context/impact.sh"
+alias review-guide="cat ~/me/scripts/review/README.md"
+
+
+# Evaluation stats (Session 61)
+alias evalstats='cd ~/me && python3 scripts/lib/query_logger.py stats 1'
+alias evalstats7='cd ~/me && python3 scripts/lib/query_logger.py stats 7'
+
+# Kidsnote Skill Tracker Aliases
+source ~/me/scripts/skill-aliases.sh
+
+# API Keys from 1Password
+export ANTHROPIC_API_KEY=$(op item get "anthropic api key" --fields credential 2>/dev/null)

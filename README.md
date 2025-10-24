@@ -514,3 +514,95 @@ Original `.zshrc`, `.vimrc`, and `.tmux.conf` derived from [simnalamburt/.dotfil
 ## License
 
 Apache-2.0/MIT. See [COPYRIGHT](COPYRIGHT) for details.
+## New Features (2025-10-24)
+
+### 🎯 Claude Code Integration
+
+**Parallel Session Management**:
+- `cps <task-name>` - Create git worktree + tmux window for parallel work
+- `cps4 <base-name>` - Setup 4 sessions (1 Plan + 3 Implementation)
+
+**Example**:
+```bash
+cps auth-refactor       # Single parallel session
+cps4 feature-oauth      # 4-session setup (plan + impl-1/2/3)
+```
+
+### 🔐 1Password Integration
+
+API keys managed securely through 1Password CLI:
+```bash
+# Setup required
+brew install 1password-cli
+
+# Keys auto-loaded in .zshrc
+export ANTHROPIC_API_KEY=$(op item get "anthropic api key" --fields credential 2>/dev/null)
+export GEMINI_API_KEY=$(op item get "gemini api key" --fields credential 2>/dev/null)
+```
+
+### 🦀 Modern CLI Tools (Rust-based)
+
+**Faster alternatives**:
+- `grep` → `rg` (ripgrep, 53x faster)
+- `cat` → `bat` (syntax highlighting)
+- `find` → `fd` (68x faster)
+- `ls` → `eza` (git status, icons)
+
+**Aliases**:
+```bash
+ll      # eza -l --git
+la      # eza -la --git
+tree    # eza --tree
+catn    # bat with line numbers
+catp    # bat with paging
+```
+
+### 📊 Review Systems
+
+**Code review automation**:
+```bash
+vote              # Quality voting (3-AI consensus)
+2v1               # Logic review (2v1 debate)
+debate            # Multi-expert debate
+pr-analyze        # PR 3-tier analysis
+review-guide      # Show review documentation
+```
+
+### ⚡ Git Optimizations
+
+**.gitconfig enhancements**:
+```ini
+[core]
+  fsmonitor = true        # File system events
+  untrackedCache = true   # Cache untracked files
+[feature]
+  manyFiles = true        # Optimize for large repos
+```
+
+### 🎨 Powerlevel10k Updates
+
+**Instant prompt control**:
+```bash
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
+```
+
+### 📦 Zinit Path Update
+
+**Modern XDG paths**:
+```bash
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+```
+
+---
+
+## Security Best Practices
+
+**NEVER commit**:
+- ✅ API keys → 1Password
+- ✅ Secrets → Environment variables
+- ✅ Tokens → `op item get`
+
+**Check before push**:
+```bash
+git diff | grep -i "api_key\|secret\|token\|password"
+```
