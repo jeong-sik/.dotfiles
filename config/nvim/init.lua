@@ -298,6 +298,48 @@ require("lazy").setup({
     config = true
   },
 
+  -- Auto formatting
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    keys = {
+      {
+        "<leader>f",
+        function()
+          require("conform").format({ async = true, lsp_fallback = true })
+        end,
+        mode = "",
+        desc = "Format buffer",
+      },
+    },
+    opts = {
+      formatters_by_ft = {
+        javascript = { "biome" },
+        typescript = { "biome" },
+        javascriptreact = { "biome" },
+        typescriptreact = { "biome" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        -- YAML: Biome doesn't support yet, fallback to prettier
+        yaml = { "prettier" },
+        -- Markdown: Biome doesn't support yet
+        markdown = { "prettier" },
+        -- HTML/CSS: Use prettier
+        html = { "prettier" },
+        css = { "prettier" },
+        python = { "black" },
+        lua = { "stylua" },
+        go = { "gofmt" },
+        rust = { "rustfmt" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_fallback = true,
+      },
+    },
+  },
+
   -- LazyGit integration
   {
     "kdheepak/lazygit.nvim",
