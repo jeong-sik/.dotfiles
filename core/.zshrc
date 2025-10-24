@@ -471,4 +471,4 @@ alias evalstats7='cd ~/me && python3 scripts/lib/query_logger.py stats 7'
 source ~/me/scripts/skill-aliases.sh
 
 # API Keys from 1Password
-export ANTHROPIC_API_KEY=$(op item get "anthropic api key" --fields credential 2>/dev/null)
+export ANTHROPIC_API_KEY=$(op item get "anthropic api key yousleepwhen" --fields credential 2>/dev/null)
