@@ -4,6 +4,8 @@
 
 A modern, organized dotfiles setup with environment separation (work/personal) and automatic installation.
 
+📖 **[USAGE.md](USAGE.md)** - 필수/선택 도구 설치 가이드 및 불필요한 기능 제거 방법
+
 ## Features
 
 - 🎯 **Environment Separation**: Separate configs for work and personal use
