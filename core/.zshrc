@@ -42,12 +42,17 @@ if is-at-least 5.1 && [ -d "$ZINIT_HOME" ]; then
   zinit light simnalamburt/cgitc
 
   autoload -Uz compinit
-  compinit
+  # Optimized: skip check if dump is less than 24h old
+  if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+  else
+    compinit -C
+  fi
   zinit cdreplay
 else
   PS1='%n@%m:%~%# '
   autoload -Uz compinit
-  compinit
+  compinit -C
 fi
 
 #
@@ -408,7 +413,13 @@ fi
 # Usage: op-exec your-command
 alias opr='op run --env-file ~/.config/env-tokens --'
 
-export GEMINI_API_KEY=$(op item get "gemini api key" --fields credential 2>/dev/null)
+# Lazy load Gemini API key (optimized)
+gemini_api_key() {
+    export GEMINI_API_KEY=$(op item get "gemini api key" --fields credential 2>/dev/null)
+    echo $GEMINI_API_KEY
+}
+# Auto-export when needed (uncomment if always needed at startup)
+# export GEMINI_API_KEY=$(gemini_api_key)
 
 
 # npm registry fix (override company VPN/MDM settings)
@@ -433,7 +444,12 @@ alias morning='_track_usage daily-morning && ~/me/scripts/daily-morning.sh'
 alias evening='_track_usage daily-evening && ~/me/scripts/daily-evening.sh'
 alias stats='_track_usage achievement-stats && ~/me/scripts/achievement-stats.py'
 
-# Second Brain Quick Access
+# Second Brain Quick Access (Smart Search - 2025-11-01)
+alias kb='~/me/scripts/smart-search.sh'                    # Auto-routing search
+alias kbq='oprun python3 ~/me/scripts/quick-search.py'     # Quick search (2-layer)
+alias kbm='oprun python3 ~/me/scripts/multi-search.py'     # Multi-layer search (6-layer)
+
+# Legacy Second Brain (deprecated)
 alias sb='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 search.py'
 alias sbh='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 hybrid_search.py'
 alias sbi='cd ~/me/second-brain-mvp && source venv/bin/activate && python3 search.py'  # Interactive mode
@@ -468,7 +484,57 @@ alias evalstats='cd ~/me && python3 scripts/lib/query_logger.py stats 1'
 alias evalstats7='cd ~/me && python3 scripts/lib/query_logger.py stats 7'
 
 # Kidsnote Skill Tracker Aliases
-source ~/me/scripts/skill-aliases.sh
+# source ~/me/scripts/skill-aliases.sh
 
-# API Keys from 1Password
-export ANTHROPIC_API_KEY=$(op item get "anthropic api key yousleepwhen" --fields credential 2>/dev/null)
+# API Keys from 1Password - Lazy Loading (optimized)
+# Helper function to run scripts with API keys
+oprun() {
+    ANTHROPIC_API_KEY=$(op item get "anthropic api key yousleepwhen" --fields credential --reveal 2>/dev/null) \
+    OPENAI_API_KEY=$(op item get "openai platform" --fields credential --reveal 2>/dev/null) \
+    GEMINI_API_KEY=$(op item get "gemini api key" --fields credential 2>/dev/null) \
+    "$@"
+}
+
+# Voice Claude Mode (Session 62, 2025-10-25)
+alias vc='oprun python3 ~/me/scripts/voice-claude.py'
+
+
+
+# VoiceMode shell completion
+if command -v voicemode >/dev/null 2>&1; then
+    # Check bash version for nosort compatibility
+    bash_version="${BASH_VERSION%%.*}"
+    bash_minor="${BASH_VERSION#*.}"
+    bash_minor="${bash_minor%%.*}"
+
+    if [[ $bash_version -gt 4 ]] || [[ $bash_version -eq 4 && $bash_minor -ge 4 ]]; then
+        eval "$(_VOICEMODE_COMPLETE=bash_source voicemode)"
+    else
+        # Filter out nosort for older bash versions
+        eval "$(_VOICEMODE_COMPLETE=bash_source voicemode | sed 's/complete -o nosort/complete/g')"
+    fi
+fi
+
+# NVM (Node Version Manager) - Lazy Loading (optimized)
+export NVM_DIR="$HOME/.nvm"
+nvm() {
+    unset -f nvm node npm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm "$@"
+}
+node() {
+    unset -f nvm node npm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    node "$@"
+}
+npm() {
+    unset -f nvm node npm
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    npm "$@"
+}
+
+# Hook Features Toggle (2025-10-29)
+alias hooks='~/me/scripts/hooks-toggle.sh'
+alias hooks-status='~/me/scripts/hooks-toggle.sh'
+alias hooks-off='~/me/scripts/hooks-toggle.sh all off'
+alias hooks-on='~/me/scripts/hooks-toggle.sh all on'
