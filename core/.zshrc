@@ -498,6 +498,12 @@ oprun() {
 # Voice Claude Mode (Session 62, 2025-10-25)
 alias vc='oprun python3 ~/me/scripts/voice-claude.py'
 
+# Dotfiles Management (2025-11-01)
+alias dotsync='~/me/projects/.dotfiles/sync-dotfiles.sh'        # Quick sync
+alias dotsync-full='~/me/projects/.dotfiles/sync-dotfiles.sh --full'  # Full sync with Brewfile
+alias dotcheck='~/me/projects/.dotfiles/sync-dotfiles.sh --dry-run'   # Check changes only
+alias dotcd='cd ~/me/projects/.dotfiles'                        # Jump to dotfiles
+
 
 
 # VoiceMode shell completion

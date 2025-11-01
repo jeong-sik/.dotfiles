@@ -465,7 +465,32 @@ nvim +CocInstall coc-tsserver coc-json +qall
 
 ## Updates
 
-To update your dotfiles:
+### 🔄 Automatic Sync (현재 환경 → dotfiles)
+
+**놓친 설정 없이 자동 동기화**:
+```bash
+# 1. 빠른 동기화 (주요 설정만)
+~/me/projects/.dotfiles/sync-dotfiles.sh
+
+# 2. 전체 동기화 (Brewfile 포함)
+~/me/projects/.dotfiles/sync-dotfiles.sh --full
+
+# 3. dry-run (변경사항만 확인)
+~/me/projects/.dotfiles/sync-dotfiles.sh --dry-run
+```
+
+**자동으로 동기화되는 것**:
+- ✅ zshrc, gitconfig, tmux.conf
+- ✅ nvim (lazy-lock.json 업데이트)
+- ✅ alacritty, hammerspoon, karabiner
+- ✅ docker, ssh 설정
+- ✅ Brewfile (--full 옵션)
+
+**권장 주기**: 주 1회 또는 중요한 설정 변경 후
+
+### 📥 Pull Updates (dotfiles → 현재 환경)
+
+To update from repository:
 ```bash
 cd ~/.dotfiles
 git pull
