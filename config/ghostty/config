@@ -1,0 +1,143 @@
+# ============================================================================
+# Ghostty Terminal Configuration (v1.0)
+# ============================================================================
+# Quick Reference:
+#   Copy/Paste: Cmd+C / Cmd+V (native macOS)
+#   Vi Mode: Not yet in Ghostty (use tmux copy mode)
+#   Scroll (outside tmux): Cmd+Shift+K/J (line), Cmd+Shift+U/D (page)
+#   Scroll (inside tmux): Option+k/j (tmux handles it)
+#   Tmux shortcuts: Cmd+T (new window), Cmd+D (split), Cmd+1-9 (jump)
+#
+# Full keybindings: See ~/.dotfiles/README.md
+# ============================================================================
+
+# Theme (optional - Ghostty has built-in themes)
+# theme = google
+# To list themes: ghostty +list-themes
+
+# Font configuration
+font-family = "FiraCode Nerd Font"
+font-size = 18
+font-style = regular
+font-style-bold = bold
+
+# Scrollback
+scrollback-limit = 100000
+
+# Window settings
+background-opacity = 0.98
+window-padding-x = 5
+window-padding-y = 5
+window-decoration = true
+
+# macOS-specific: Allow Option key as Alt/Meta for tmux
+macos-option-as-alt = true
+
+# Cursor
+cursor-style = bar
+
+# Copy/Paste behavior
+clipboard-read = allow
+clipboard-write = allow
+clipboard-trim-trailing-spaces = true
+
+# Shell integration (helps with OSC 52 and other features)
+shell-integration = fish
+shell-integration-features = cursor,sudo,title
+
+# Performance
+resize-overlay = never
+
+# ============================================================================
+# Keybindings
+# ============================================================================
+# Format: keybind = trigger=action
+# Modifiers: ctrl, shift, super (Cmd on macOS), alt (Option on macOS)
+
+# --- Copy/Paste (Native macOS) ---
+keybind = super+c=copy_to_clipboard
+keybind = super+v=paste_from_clipboard
+
+# --- Scrolling (Outside tmux) ---
+# Use Cmd+Shift for safety (won't conflict with tmux)
+keybind = super+shift+k=scroll_to_top
+keybind = super+shift+j=scroll_to_bottom
+keybind = super+shift+u=scroll_page_up
+keybind = super+shift+d=scroll_page_down
+keybind = super+shift+f=scroll_page_down
+
+# Note: Tmux scrolling (Option+k/j) works automatically via tmux config
+
+# --- Tmux Integration ---
+# Cmd+T: New tmux window
+keybind = super+t=text:\x11c
+
+# Cmd+W: Close tmux window
+keybind = super+w=text:\x11X
+
+# Cmd+B: Previous window
+keybind = super+b=text:\x11B
+
+# Cmd+Shift+B: Last window
+keybind = super+shift+b=text:\x11J
+
+# Cmd+D: Split pane vertically
+keybind = super+d=text:\x11%
+
+# Cmd+Shift+D: Split pane horizontally
+keybind = super+shift+d=text:\x11\"
+
+# Cmd+O: Swap panes
+keybind = super+o=text:\x11o
+
+# Cmd+Shift+O: Rotate panes
+keybind = super+shift+o=text:\x11\x0f
+
+# Cmd+1-9: Switch to tmux window (override Ghostty default tab switching)
+# Note: Must unbind Ghostty's default goto_tab first, then bind to tmux
+keybind = super+digit_1=unbind
+keybind = super+digit_2=unbind
+keybind = super+digit_3=unbind
+keybind = super+digit_4=unbind
+keybind = super+digit_5=unbind
+keybind = super+digit_6=unbind
+keybind = super+digit_7=unbind
+keybind = super+digit_8=unbind
+keybind = super+digit_9=unbind
+
+# Now bind to tmux window selection
+keybind = super+digit_1=text:\x111
+keybind = super+digit_2=text:\x112
+keybind = super+digit_3=text:\x113
+keybind = super+digit_4=text:\x114
+keybind = super+digit_5=text:\x115
+keybind = super+digit_6=text:\x116
+keybind = super+digit_7=text:\x117
+keybind = super+digit_8=text:\x118
+keybind = super+digit_9=text:\x119
+
+# Cmd+E: Tmux choose-tree
+keybind = super+e=text:\x11w
+
+# Cmd+Arrow: Navigate panes
+keybind = super+left=text:\x11H
+keybind = super+down=text:\x11J
+keybind = super+up=text:\x11K
+keybind = super+right=text:\x11L
+
+# Cmd+Opt+Comma/Period: Previous/Next session
+keybind = super+alt+comma=text:\x11\x08
+keybind = super+alt+period=text:\x11\x0c
+
+# --- Buffer Management ---
+# Cmd+Opt+L: Clear screen and scrollback
+keybind = super+alt+l=text:\x1bc
+
+# ============================================================================
+# Notes
+# ============================================================================
+# - Ghostty doesn't have Vi mode yet (use tmux copy mode instead)
+# - OSC 52 clipboard works automatically with shell-integration
+# - Font ligatures work by default with Nerd Fonts
+# - For theme customization, check: ghostty +show-config theme
+# - Reload config: Cmd+Comma (opens settings) or restart Ghostty

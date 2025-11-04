@@ -37,6 +37,13 @@ osc52 = "OnlyCopy"
 # Without this, Option+k/j won't work for tmux scroll
 # macOS default uses Option for special characters (é, ñ, etc)
 option_as_alt = "Both"
+# 렌더링 개선 설정 추가
+opacity = 0.98          # 투명도 (1.0 = 불투명)
+blur = false            # 배경 블러 비활성화 (성능↑)
+decorations = "Full"    # 윈도우 장식 (또는 "Buttonless")
+dynamic_padding = false # 동적 패딩 비활성화
+padding = { x = 5, y = 5 }  # 여백 설정
+
 
 # Vi Mode configuration
 [hints]
@@ -88,11 +95,16 @@ bindings = [
 
 
   { key = "Comma", mods = "Alt|Command", chars = "\u0011\u0008" },
-  { key = "Period", mods = "Alt|Command", chars = "\u0011\u000c" }
+  { key = "Period", mods = "Alt|Command", chars = "\u0011\u000c" },
 
-]
+ # === 버퍼 관리 ===
+  { key = "L", mods = "Command|Alt", chars = "\u001bc" },     # Cmd+Opt+L: 완전 클리어
+ ]
 
 # Selection configuration
 [selection]
 save_to_clipboard = true
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+
+
+
